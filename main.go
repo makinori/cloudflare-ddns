@@ -61,9 +61,18 @@ func updateRecord(
 	var verb string
 
 	if recordExists {
-		verb = "update"
-
 		record := recordQuery.Result[0]
+
+		if (!ipv6 && record.Content == currentIPV4) ||
+			(ipv6 && record.Content == currentIPV6) {
+			log.Printf(
+				"checked %s record: %s\n",
+				simpleRecordTypeToString(recordType), recordToUpdate,
+			)
+			return
+		}
+
+		verb = "update"
 
 		var recordUpdateParams dns.RecordUpdateParamsBodyUnion
 
