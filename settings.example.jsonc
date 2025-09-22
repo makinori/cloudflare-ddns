@@ -1,6 +1,6 @@
 {
 	"interval": 5, // minutes
-	"ipv6": false,
+	"ipv6": false, // will do both v4 and v6
 	"accounts": [
 		{
 			"email": "",
