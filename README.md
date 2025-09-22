@@ -13,7 +13,7 @@ cp settings.example.jsonc settings.jsonc
 Edit `settings.jsonc`. Interval is in minutes.
 
 Highly recommend setting zones to `"hotmilk.space": ["hotmilk.space"]`<br>
-then targeting a `*` wildcard, or any subdomains to `@`
+then targeting a `*` wildcard record, or any subdomains to `@`
 
 You can find your Cloudflare API key here: https://dash.cloudflare.com/profile/api-tokens (Global API Key)
 
