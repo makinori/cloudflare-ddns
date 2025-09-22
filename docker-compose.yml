@@ -1,0 +1,6 @@
+services:
+    cloudflare-ddns:
+        build: .
+        restart: always
+        volumes:
+            - ./settings.jsonc:/settings.jsonc:ro

@@ -4,8 +4,6 @@
 
 ## Installation
 
-Firstly make sure you have **Deno** and **Git** installed.
-
 ```bash
 git clone https://github.com/makidoll/cloudflare-ddns.git
 cd cloudflare-ddns
@@ -19,10 +17,4 @@ then targeting a `*` wildcard, or any subdomains to `@`
 
 You can find your Cloudflare API key here: https://dash.cloudflare.com/profile/api-tokens (Global API Key)
 
-Run `deno run -A main.ts` indefinitely or use a process manager like `pm2`.
-
-```bash
-npm install pm2 -g
-pm2 start ecosystem.config.js
-pm2 ls
-```
+Then use `docker compose up -d` to build and run
