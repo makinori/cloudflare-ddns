@@ -47,5 +47,4 @@ func getMyIP(ipv6 bool) (string, error) {
 	}
 
 	return string(ipBytes), nil
-
 }
