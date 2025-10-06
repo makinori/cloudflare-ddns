@@ -193,7 +193,7 @@ func updateAccount(account *Account) {
 }
 
 func onInterval() {
-	ipv4, err := getMyIP(settings.IPV6)
+	ipv4, err := getMyIP(false)
 	if err != nil {
 		log.Println("failed to get ipv4: " + err.Error())
 		return
@@ -201,7 +201,7 @@ func onInterval() {
 
 	var ipv6 string
 	if settings.IPV6 {
-		ipv6, err = getMyIP(settings.IPV6)
+		ipv6, err = getMyIP(true)
 		if err != nil {
 			log.Println("failed to get ipv6: " + err.Error())
 			return
@@ -214,7 +214,7 @@ func onInterval() {
 
 		log.Println("new ipv4: " + ipv4)
 		if settings.IPV6 {
-			log.Println("new ipv6: " + ipv4)
+			log.Println("new ipv6: " + ipv6)
 		}
 
 		for i := range settings.Accounts {
