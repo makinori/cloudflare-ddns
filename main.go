@@ -16,6 +16,11 @@ var (
 	currentIPV6 string
 )
 
+type IPToUpdate struct {
+	v4 bool
+	v6 bool
+}
+
 func simpleRecordTypeToString(recordType dns.RecordListParamsType) string {
 	switch recordType {
 	case dns.RecordListParamsTypeA:
@@ -148,15 +153,18 @@ func updateRecord(
 }
 
 func updateZone(
-	client *cloudflare.Client, zoneName string, recordsToUpdate []string,
+	client *cloudflare.Client, zoneName string,
+	recordsToUpdate []string, ipToUpdate IPToUpdate,
 ) {
-	zoneQuery, err := client.Zones.List(context.Background(), zones.ZoneListParams{
-		Page:    cloudflare.Float(1),
-		PerPage: cloudflare.Float(1),
-		Status:  cloudflare.F(zones.ZoneListParamsStatusActive),
-		// TODO: defaults to equal but how to explicitly state?
-		Name: cloudflare.F(zoneName),
-	})
+	zoneQuery, err := client.Zones.List(context.Background(),
+		zones.ZoneListParams{
+			Page:    cloudflare.Float(1),
+			PerPage: cloudflare.Float(1),
+			Status:  cloudflare.F(zones.ZoneListParamsStatusActive),
+			// TODO: defaults to equal but how to explicitly state?
+			Name: cloudflare.F(zoneName),
+		},
+	)
 
 	if err != nil {
 		log.Printf(
@@ -174,21 +182,23 @@ func updateZone(
 	zone := zoneQuery.Result[0]
 
 	for _, recordToUpdate := range recordsToUpdate {
-		go updateRecord(client, &zone, recordToUpdate, false)
-		if settings.IPV6 {
+		if ipToUpdate.v4 {
+			go updateRecord(client, &zone, recordToUpdate, false)
+		}
+		if ipToUpdate.v6 {
 			go updateRecord(client, &zone, recordToUpdate, true)
 		}
 	}
 }
 
-func updateAccount(account *Account) {
+func updateAccount(account *Account, ipToUpdate IPToUpdate) {
 	client := cloudflare.NewClient(
 		option.WithAPIEmail(account.Email),
 		option.WithAPIKey(account.Key),
 	)
 
 	for zone, recordsToUpdate := range account.Zones {
-		go updateZone(client, zone, recordsToUpdate)
+		go updateZone(client, zone, recordsToUpdate, ipToUpdate)
 	}
 }
 
@@ -204,21 +214,30 @@ func onInterval() {
 		ipv6, err = getMyIP(true)
 		if err != nil {
 			log.Println("failed to get ipv6: " + err.Error())
-			return
+			// return
+			// lets not return incase ipv6 doesnt work, instead do nothing
+			// definitely error on ipv4 though
+			ipv6 = currentIPV6
 		}
 	}
 
-	if currentIPV4 != ipv4 || currentIPV6 != ipv6 {
-		currentIPV4 = ipv4
-		currentIPV6 = ipv6
+	var ipToUpdate IPToUpdate
 
+	if currentIPV4 != ipv4 {
 		log.Println("new ipv4: " + ipv4)
-		if settings.IPV6 {
-			log.Println("new ipv6: " + ipv6)
-		}
+		currentIPV4 = ipv4
+		ipToUpdate.v4 = true
+	}
 
+	if currentIPV6 != ipv6 {
+		log.Println("new ipv6: " + ipv6)
+		currentIPV6 = ipv6
+		ipToUpdate.v6 = true
+	}
+
+	if ipToUpdate.v4 || ipToUpdate.v6 {
 		for i := range settings.Accounts {
-			go updateAccount(&settings.Accounts[i])
+			go updateAccount(&settings.Accounts[i], ipToUpdate)
 		}
 	}
 }
