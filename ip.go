@@ -39,11 +39,11 @@ func getMyIP(ipv6 bool) (string, error) {
 	validIPV4 := validateIPV4Regexp.Match(ipBytes)
 
 	if !ipv6 && !validIPV4 {
-		return "", errors.New("failed to get valid ipv4")
+		return "", errors.New("failed to get valid ipv4: " + string(ipBytes))
 	}
 
 	if ipv6 && validIPV4 {
-		return "", errors.New("failed to get valid ipv4")
+		return "", errors.New("failed to get valid ipv6: " + string(ipBytes))
 	}
 
 	return string(ipBytes), nil
