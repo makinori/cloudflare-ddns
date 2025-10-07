@@ -1,6 +1,13 @@
 {
 	"interval": 5, // minutes
 	"ipv6": false, // will do both v4 and v6
+	"unifi": {
+		// for updating ipv6 network list to use in firewall
+		"enable": false,
+		"gateway": "192.168.1.1",
+		"token": "", // control plane > integrations > api key
+		"listID": "" // profiles > network lists > [use dev mode]
+	},
 	"accounts": [
 		{
 			"email": "",

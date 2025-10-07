@@ -14,10 +14,18 @@ type Account struct {
 	Zones map[string][]string `json:"zones"`
 }
 
+type UnifiSettings struct {
+	Enable  bool   `json:"enable"`
+	Gateway string `json:"gateway"`
+	Token   string `json:"token"`
+	ListID  string `json:"listID"`
+}
+
 type Settings struct {
-	Interval uint      `json:"interval"`
-	IPV6     bool      `json:"ipv6"`
-	Accounts []Account `json:"accounts"`
+	Interval uint          `json:"interval"`
+	IPV6     bool          `json:"ipv6"`
+	Unifi    UnifiSettings `json:"unifi"`
+	Accounts []Account     `json:"accounts"`
 }
 
 var (

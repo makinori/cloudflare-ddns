@@ -240,6 +240,18 @@ func onInterval() {
 			go updateAccount(&settings.Accounts[i], ipToUpdate)
 		}
 	}
+
+	if settings.Unifi.Enable && ipToUpdate.v6 {
+		err := unifiUpdateNetworkList(
+			settings.Unifi.Gateway, settings.Unifi.ListID,
+			[]string{currentIPV6}, settings.Unifi.Token,
+		)
+		if err != nil {
+			log.Println("failed to update unifi ipv6: " + err.Error())
+		} else {
+			log.Println("updated unifi ipv6!")
+		}
+	}
 }
 
 func main() {
