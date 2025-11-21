@@ -5,7 +5,7 @@
 ## Installation
 
 ```bash
-git clone https://github.com/makidoll/cloudflare-ddns.git
+git clone https://github.com/makinori/cloudflare-ddns.git
 cd cloudflare-ddns
 cp settings.example.jsonc settings.jsonc
 ```
@@ -17,4 +17,6 @@ then targeting a `*` wildcard record, or any subdomains to `@`
 
 You can find your Cloudflare API key here: https://dash.cloudflare.com/profile/api-tokens (Global API Key)
 
-Then use `docker compose up -d` to build and run
+<!-- Then use `docker compose up -d` to build and run -->
+
+Place in `.config/containers/systemd/` and `systemctl --user start cloudflare-ddns`
