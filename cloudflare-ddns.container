@@ -1,0 +1,21 @@
+[Unit]
+Description=Cloudflare DDNS
+Wants=network-online.target
+After=network-online.target
+After=local-fs.target
+
+[Service]
+Restart=always
+TimeoutStartSec=900
+
+[Install]
+WantedBy=default.target
+
+[Container]
+HostName=cloudflare-ddns
+Image=cloudflare-ddns.build
+# AutoUpdate=registry
+
+Network=host
+
+Volume=./settings.jsonc:/settings.jsonc:ro

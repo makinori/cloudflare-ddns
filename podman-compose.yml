@@ -1,7 +1,0 @@
-services:
-    cloudflare-ddns:
-        build: .
-        restart: always
-        network_mode: host
-        volumes:
-            - ./settings.jsonc:/settings.jsonc:ro
